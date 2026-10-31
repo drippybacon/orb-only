@@ -1,0 +1,14 @@
+.gradle/
+build/
+out/
+bin/
+.idea/
+.vscode/
+*.iml
+*.log
+*.hprof
+hs_err_pid*
+.classpath
+.project
+.settings/
+local.properties
