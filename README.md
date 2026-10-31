@@ -17,7 +17,7 @@ Font size and colour are configurable. Active prayer and special attack highligh
 
 Centered time labels use whole minutes for estimates of ten minutes or more; Free labels show the full time. This choice is independent of the core Prayer plugin's orb-text setting. Other orbs retain their native value text, including run-energy timers.
 
-With the core **Prayer** plugin enabled, Orb Only also draws its tick helper, potion-dose pulse and statistics tooltip using the core settings. For the tick helper, set **Pray flick location** to **Prayer orb** or **Both**.
+With the core **Prayer** plugin enabled, Orb Only also draws its potion-dose pulse and statistics tooltip using the core settings. **Show prayer tick helper** is enabled by default; turn it off to hide the tick sweep on the orb. The helper also requires **Pray flick location** set to **Prayer orb** or **Both** in the core Prayer settings.
 
 ## Indicators
 

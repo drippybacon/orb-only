@@ -145,7 +145,10 @@ public class OrbValueOverlay extends Overlay
 					// Keep the dose pulse and tick sweep visible above centered labels.
 					prayerHelper.drawDoseAndTooltip(valuesGraphics, circle, !config.showPrayerPoints(),
 						interactions.hovered(surface));
-					prayerHelper.drawTickHelper(valuesGraphics, circle);
+					if (config.showPrayerTickHelper())
+					{
+						prayerHelper.drawTickHelper(valuesGraphics, circle);
+					}
 				}
 			}
 		}

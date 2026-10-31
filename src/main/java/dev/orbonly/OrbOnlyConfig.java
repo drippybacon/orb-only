@@ -90,10 +90,21 @@ public interface OrbOnlyConfig extends Config
 	}
 
 	@ConfigItem(
+			keyName = "showPrayerTickHelper",
+			name = "Show prayer tick helper",
+			description = "Show the Prayer plugin's tick sweep on the orb. Uses its flick-helper settings.",
+			position = 5
+	)
+	default boolean showPrayerTickHelper()
+	{
+		return true;
+	}
+
+	@ConfigItem(
 			keyName = "highlightActiveSpecialAttack",
 			name = "Highlight active special attack",
 			description = "Highlight the orb and label when special attack is armed.",
-			position = 5
+			position = 6
 	)
 	default boolean highlightActiveSpecialAttack()
 	{
@@ -104,7 +115,7 @@ public interface OrbOnlyConfig extends Config
 			keyName = "activeSpecialAttackColor",
 			name = "Active special attack colour",
 			description = "Border and label colour for an armed special attack.",
-			position = 6
+			position = 7
 	)
 	default Color activeSpecialAttackColor()
 	{
@@ -115,7 +126,7 @@ public interface OrbOnlyConfig extends Config
 			keyName = "highlightActivePrayer",
 			name = "Highlight active prayer",
 			description = "Highlight the orb and label while quick prayers or any individual prayer are active.",
-			position = 7
+			position = 8
 	)
 	default boolean highlightActivePrayer()
 	{
@@ -126,7 +137,7 @@ public interface OrbOnlyConfig extends Config
 			keyName = "activePrayerColor",
 			name = "Active prayer colour",
 			description = "Border and label colour while prayer is active.",
-			position = 8
+			position = 9
 	)
 	default Color activePrayerColor()
 	{
@@ -137,7 +148,7 @@ public interface OrbOnlyConfig extends Config
 			keyName = "showPoisonCountdown",
 			name = "Poison/venom countdown",
 			description = "Show an estimated countdown to the next poison/venom hit around the HP orb.",
-			position = 9
+			position = 10
 	)
 	default boolean showPoisonCountdown()
 	{
@@ -149,7 +160,7 @@ public interface OrbOnlyConfig extends Config
 			keyName = "poisonRingThickness",
 			name = "Countdown ring thickness",
 			description = "Countdown ring width in pixels.",
-			position = 10
+			position = 11
 	)
 	default int poisonRingThickness()
 	{
@@ -160,7 +171,7 @@ public interface OrbOnlyConfig extends Config
 			keyName = "poisonRingColor",
 			name = "Poison ring colour",
 			description = "Ring colour while poisoned.",
-			position = 11
+			position = 12
 	)
 	default Color poisonRingColor()
 	{
@@ -171,7 +182,7 @@ public interface OrbOnlyConfig extends Config
 			keyName = "venomRingColor",
 			name = "Venom ring colour",
 			description = "Ring colour while venomed.",
-			position = 12
+			position = 13
 	)
 	default Color venomRingColor()
 	{
