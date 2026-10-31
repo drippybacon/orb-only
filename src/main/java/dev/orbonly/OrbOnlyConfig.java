@@ -1,3 +1,27 @@
+/*
+ * Copyright (c) 2026, drippybacon
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice, this
+ *    list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 package dev.orbonly;
 
 import java.awt.Color;
@@ -10,10 +34,10 @@ import net.runelite.client.config.Range;
 public interface OrbOnlyConfig extends Config
 {
 	@ConfigItem(
-		keyName = "showOrbValues",
-		name = "Show labels",
-		description = "Show the live orb values. Disable for icons only.",
-		position = 0
+			keyName = "showOrbValues",
+			name = "Show labels",
+			description = "Show orb values. Turn off for icons only.",
+			position = 0
 	)
 	default boolean showOrbValues()
 	{
@@ -21,10 +45,10 @@ public interface OrbOnlyConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "labelPosition",
-		name = "Label position",
-		description = "Center keeps values inside the orbs. Free lets you hold Alt and drag each label separately; Alt-right-click resets its position.",
-		position = 1
+			keyName = "labelPosition",
+			name = "Label position",
+			description = "Center values inside each orb, or Alt-drag Free labels. Alt-right-click resets a Free label.",
+			position = 1
 	)
 	default OrbLabelPosition labelPosition()
 	{
@@ -33,10 +57,10 @@ public interface OrbOnlyConfig extends Config
 
 	@Range(min = 10, max = 24)
 	@ConfigItem(
-		keyName = "valueFontSize",
-		name = "Label font size",
-		description = "Choose the size of the labels. Centered labels shrink to fit inside their orb.",
-		position = 2
+			keyName = "valueFontSize",
+			name = "Label font size",
+			description = "Font size; centered labels shrink to fit.",
+			position = 2
 	)
 	default int valueFontSize()
 	{
@@ -44,10 +68,10 @@ public interface OrbOnlyConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "labelColor",
-		name = "Label colour",
-		description = "Colour of the labels. Active prayer and special attack use their highlight colours when those highlights are enabled.",
-		position = 3
+			keyName = "labelColor",
+			name = "Label colour",
+			description = "Label colour when no active-state highlight applies.",
+			position = 3
 	)
 	default Color labelColor()
 	{
@@ -55,21 +79,21 @@ public interface OrbOnlyConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "showPrayerTimeRemaining",
-		name = "Show prayer time remaining",
-		description = "Show estimated time until prayer runs out while prayers are active. Disable to show prayer points. Inactive prayers always show points. Applies to Center and Free labels.",
-		position = 4
+			keyName = "showPrayerPoints",
+			name = "Show prayer points",
+			description = "Show points instead of estimated time while prayers are active. Inactive prayers always show points.",
+			position = 4
 	)
-	default boolean showPrayerTimeRemaining()
+	default boolean showPrayerPoints()
 	{
 		return false;
 	}
 
 	@ConfigItem(
-		keyName = "highlightActiveSpecialAttack",
-		name = "Highlight active special attack",
-		description = "Highlight the border and label while special attack is enabled.",
-		position = 5
+			keyName = "highlightActiveSpecialAttack",
+			name = "Highlight active special attack",
+			description = "Highlight the orb and label when special attack is armed.",
+			position = 5
 	)
 	default boolean highlightActiveSpecialAttack()
 	{
@@ -77,10 +101,10 @@ public interface OrbOnlyConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "activeSpecialAttackColor",
-		name = "Active special attack colour",
-		description = "Border and label colour while special attack is enabled.",
-		position = 6
+			keyName = "activeSpecialAttackColor",
+			name = "Active special attack colour",
+			description = "Border and label colour for an armed special attack.",
+			position = 6
 	)
 	default Color activeSpecialAttackColor()
 	{
@@ -88,10 +112,10 @@ public interface OrbOnlyConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "highlightActivePrayer",
-		name = "Highlight active prayer",
-		description = "Highlight the border and label while quick prayers or an individual prayer are active.",
-		position = 7
+			keyName = "highlightActivePrayer",
+			name = "Highlight active prayer",
+			description = "Highlight the orb and label while quick prayers or any individual prayer are active.",
+			position = 7
 	)
 	default boolean highlightActivePrayer()
 	{
@@ -99,10 +123,10 @@ public interface OrbOnlyConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "activePrayerColor",
-		name = "Active prayer colour",
-		description = "Border and label colour while quick prayers or an individual prayer are active.",
-		position = 8
+			keyName = "activePrayerColor",
+			name = "Active prayer colour",
+			description = "Border and label colour while prayer is active.",
+			position = 8
 	)
 	default Color activePrayerColor()
 	{
@@ -110,10 +134,10 @@ public interface OrbOnlyConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "showPoisonCountdown",
-		name = "Poison/venom countdown",
-		description = "Show a shrinking ring on the HP orb until the next poison or venom damage tick. It follows the orb automatically and resyncs with damage hitsplats.",
-		position = 9
+			keyName = "showPoisonCountdown",
+			name = "Poison/venom countdown",
+			description = "Show an estimated countdown to the next poison/venom hit around the HP orb.",
+			position = 9
 	)
 	default boolean showPoisonCountdown()
 	{
@@ -122,10 +146,10 @@ public interface OrbOnlyConfig extends Config
 
 	@Range(min = 1, max = 4)
 	@ConfigItem(
-		keyName = "poisonRingThickness",
-		name = "Countdown ring thickness",
-		description = "Thickness of the poison/venom countdown ring in pixels.",
-		position = 10
+			keyName = "poisonRingThickness",
+			name = "Countdown ring thickness",
+			description = "Countdown ring width in pixels.",
+			position = 10
 	)
 	default int poisonRingThickness()
 	{
@@ -133,10 +157,10 @@ public interface OrbOnlyConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "poisonRingColor",
-		name = "Poison ring colour",
-		description = "Countdown ring colour while poisoned.",
-		position = 11
+			keyName = "poisonRingColor",
+			name = "Poison ring colour",
+			description = "Ring colour while poisoned.",
+			position = 11
 	)
 	default Color poisonRingColor()
 	{
@@ -144,10 +168,10 @@ public interface OrbOnlyConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "venomRingColor",
-		name = "Venom ring colour",
-		description = "Countdown ring colour while venomed.",
-		position = 12
+			keyName = "venomRingColor",
+			name = "Venom ring colour",
+			description = "Ring colour while venomed.",
+			position = 12
 	)
 	default Color venomRingColor()
 	{

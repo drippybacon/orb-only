@@ -51,16 +51,22 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 # RuneLite Prayer
 
-The tick sweep and prayer drain estimate in `OrbPrayerHelper.java` are adapted from RuneLite's Prayer plugin:
+The tick sweep, prayer drain estimate, dose pulse, tooltip and restoration-item data in `OrbPrayerHelper.java` are adapted from RuneLite's Prayer plugin:
 
-https://github.com/runelite/runelite/blob/master/runelite-client/src/main/java/net/runelite/client/plugins/prayer/PrayerFlickOverlay.java
+https://github.com/runelite/runelite/blob/7715a1d26e6cbbfdce7ad266a39c8c3c611211a0/runelite-client/src/main/java/net/runelite/client/plugins/prayer/PrayerFlickOverlay.java
 
-https://github.com/runelite/runelite/blob/master/runelite-client/src/main/java/net/runelite/client/plugins/prayer/PrayerPlugin.java
+https://github.com/runelite/runelite/blob/7715a1d26e6cbbfdce7ad266a39c8c3c611211a0/runelite-client/src/main/java/net/runelite/client/plugins/prayer/PrayerPlugin.java
 
-https://github.com/runelite/runelite/blob/master/runelite-client/src/main/java/net/runelite/client/plugins/prayer/PrayerType.java
+https://github.com/runelite/runelite/blob/7715a1d26e6cbbfdce7ad266a39c8c3c611211a0/runelite-client/src/main/java/net/runelite/client/plugins/prayer/PrayerType.java
+
+https://github.com/runelite/runelite/blob/7715a1d26e6cbbfdce7ad266a39c8c3c611211a0/runelite-client/src/main/java/net/runelite/client/plugins/prayer/PrayerDoseOverlay.java
+
+https://github.com/runelite/runelite/blob/7715a1d26e6cbbfdce7ad266a39c8c3c611211a0/runelite-client/src/main/java/net/runelite/client/plugins/prayer/PrayerRestoreType.java
 
 Copyright (c) 2017, Adam <Adam@sigterm.info>
 Copyright (c) 2018, Raqes <j.raqes@gmail.com>
+Copyright (c) 2018, Ethan <https://github.com/shmeeps>
+Copyright (c) 2018, Tomas Slusny <slusnucky@gmail.com>
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

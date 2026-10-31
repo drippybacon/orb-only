@@ -19,6 +19,8 @@ dependencies {
 	compileOnly group: 'net.runelite', name: 'client', version: runeLiteVersion
 	testImplementation group: 'net.runelite', name: 'client', version: runeLiteVersion
 	testImplementation group: 'net.runelite', name: 'jshell', version: runeLiteVersion
+	testImplementation 'junit:junit:4.13.2'
+	testImplementation 'org.mockito:mockito-core:4.11.0'
 }
 
 group = 'dev.orbonly'
@@ -31,8 +33,15 @@ tasks.withType(JavaCompile).configureEach {
 
 tasks.named('jar') {
 	from('runelite-plugin.properties')
-	from('LICENSE')
-	from('THIRD-PARTY-NOTICES.md')
+}
+
+tasks.named('test') {
+	useJUnit()
+	dependsOn tasks.named('jar')
+	inputs.files('LICENSE', 'THIRD-PARTY-NOTICES.md')
+	inputs.file(tasks.named('jar').flatMap { it.archiveFile })
+	systemProperty 'java.awt.headless', 'true'
+	systemProperty 'orbonly.jar', tasks.named('jar').get().archiveFile.get().asFile.absolutePath
 }
 
 tasks.register('run', JavaExec) {

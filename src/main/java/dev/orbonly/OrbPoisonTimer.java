@@ -1,7 +1,34 @@
+/*
+ * Copyright (c) 2026, drippybacon
+ * Copyright (c) 2026, corhen
+ * Copyright (c) 2026, Jin-Jiyunsun
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice, this
+ *    list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 /* Poison/venom event tracking adapted from Poison Ring.
  * See THIRD-PARTY-NOTICES.md for attribution and license. */
 package dev.orbonly;
 
+import java.util.function.LongSupplier;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import net.runelite.api.Client;
@@ -19,6 +46,7 @@ final class OrbPoisonTimer
 	private static final long GAME_TICK_NANOS = 600_000_000L;
 
 	private final Client client;
+	private final LongSupplier nanoTime;
 	private int poisonValue;
 	private int ticksUntilDamage;
 	private boolean pendingSync;
@@ -27,7 +55,13 @@ final class OrbPoisonTimer
 	@Inject
 	private OrbPoisonTimer(Client client)
 	{
+		this(client, System::nanoTime);
+	}
+
+	OrbPoisonTimer(Client client, LongSupplier nanoTime)
+	{
 		this.client = client;
+		this.nanoTime = nanoTime;
 	}
 
 	void start()
@@ -74,8 +108,7 @@ final class OrbPoisonTimer
 		}
 		if (pendingSync)
 		{
-			// Hitsplats arrive while processing this tick's packets. Begin the full
-			// interval at its boundary rather than decrementing the new timer twice.
+			// Count the hitsplat's tick as the start of the new interval.
 			ticksUntilDamage = DAMAGE_INTERVAL_TICKS;
 			pendingSync = false;
 		}
@@ -83,7 +116,7 @@ final class OrbPoisonTimer
 		{
 			ticksUntilDamage--;
 		}
-		lastTickNanos = System.nanoTime();
+		lastTickNanos = nanoTime.getAsLong();
 	}
 
 	void onHitsplat(HitsplatApplied event)
@@ -143,7 +176,7 @@ final class OrbPoisonTimer
 		{
 			return 1;
 		}
-		double subTick = Math.min(1, Math.max(0, (System.nanoTime() - lastTickNanos) / (double) GAME_TICK_NANOS));
+		double subTick = Math.min(1, Math.max(0, (nanoTime.getAsLong() - lastTickNanos) / (double) GAME_TICK_NANOS));
 		return Math.max(0, Math.min(1, (ticksUntilDamage - subTick) / DAMAGE_INTERVAL_TICKS));
 	}
 
@@ -151,6 +184,6 @@ final class OrbPoisonTimer
 	{
 		ticksUntilDamage = DAMAGE_INTERVAL_TICKS;
 		pendingSync = true;
-		lastTickNanos = System.nanoTime();
+		lastTickNanos = nanoTime.getAsLong();
 	}
 }

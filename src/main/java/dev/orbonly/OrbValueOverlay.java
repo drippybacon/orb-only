@@ -1,3 +1,27 @@
+/*
+ * Copyright (c) 2026, drippybacon
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice, this
+ *    list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 package dev.orbonly;
 
 import java.awt.BasicStroke;
@@ -38,7 +62,7 @@ public class OrbValueOverlay extends Overlay
 	private final OrbPrayerHelper prayerHelper;
 
 	@Inject
-	private OrbValueOverlay(Client client, OrbOnlyConfig config, OrbOnlyPlugin plugin,
+	OrbValueOverlay(Client client, OrbOnlyConfig config, OrbOnlyPlugin plugin,
 		OrbUiState uiState, OrbFrameImages frames, OrbInteractions interactions, OrbPoisonTimer poisonTimer,
 		OrbPrayerHelper prayerHelper)
 	{
@@ -53,6 +77,7 @@ public class OrbValueOverlay extends Overlay
 		setPosition(OverlayPosition.DYNAMIC);
 		setLayer(OverlayLayer.MANUAL);
 		drawAfterInterface(InterfaceID.ORBS);
+		drawAfterInterface(InterfaceID.ORBS_NOMAP);
 		setMovable(false);
 		setSnappable(false);
 	}
@@ -79,8 +104,8 @@ public class OrbValueOverlay extends Overlay
 					continue;
 				}
 				OrbType orb = surface.orb;
-				Rectangle circle = orb.getCircleBounds(client);
-				Widget icon = client.getWidget(orb.iconId);
+				Rectangle circle = surface.circle();
+				Widget icon = surface.icon;
 				int innerDiameter = Math.min(icon.getWidth(), icon.getHeight());
 				boolean hover = !uiState.nativeHidden(surface.button) && interactions.hovered(surface);
 				Widget frame = hover ? surface.button : surface.backing;
@@ -92,7 +117,7 @@ public class OrbValueOverlay extends Overlay
 				}
 				if (ring != null)
 				{
-					// Only the ring is drawn here. The native fill, icon and timers stay live below it.
+					// Leave the native gauge, icon and timers visible beneath this frame.
 					valuesGraphics.drawImage(ring, circle.x, circle.y, circle.width, circle.height, null);
 				}
 				Color highlight = highlightColor(orb);
@@ -115,9 +140,11 @@ public class OrbValueOverlay extends Overlay
 							highlight != null ? highlight : config.labelColor());
 					}
 				}
-				if (orb == OrbType.PRAYER)
+				if (orb == OrbType.PRAYER && !uiState.nativeHidden(surface.button))
 				{
-					// Draw after centered labels so the beat remains visible over them.
+					// Keep the dose pulse and tick sweep visible above centered labels.
+					prayerHelper.drawDoseAndTooltip(valuesGraphics, circle, !config.showPrayerPoints(),
+						interactions.hovered(surface));
 					prayerHelper.drawTickHelper(valuesGraphics, circle);
 				}
 			}
@@ -133,10 +160,11 @@ public class OrbValueOverlay extends Overlay
 	{
 		if (orb == OrbType.PRAYER)
 		{
-			return prayerHelper.label(config.showPrayerTimeRemaining(),
+			return prayerHelper.label(!config.showPrayerPoints(),
 				config.labelPosition() == OrbLabelPosition.CENTER);
 		}
-		Widget value = client.getWidget(orb.valueId);
+		OrbUiState.Surface surface = uiState.surface(orb);
+		Widget value = surface == null ? null : surface.value;
 		if (value == null || value.getText() == null)
 		{
 			return null;
@@ -154,7 +182,7 @@ public class OrbValueOverlay extends Overlay
 	private Color highlightColor(OrbType orb)
 	{
 		if (orb == OrbType.SPECIAL_ATTACK && config.highlightActiveSpecialAttack()
-			&& client.getVarpValue(VarPlayer.SPECIAL_ATTACK_ENABLED) == 1)
+			&& client.getVarpValue(VarPlayer.SPECIAL_ATTACK_ENABLED) > 0)
 		{
 			return config.activeSpecialAttackColor();
 		}
@@ -210,8 +238,7 @@ public class OrbValueOverlay extends Overlay
 		try
 		{
 			int thickness = Math.max(1, Math.min(4, configuredThickness));
-			// Share the frame's pixel centre and footprint. No native-widget offsets,
-			// fixed canvas coordinates or independent ring diameter are involved.
+			// Use the frame's bounds so the countdown follows moved orbs.
 			double inset = thickness / 2.0;
 			Arc2D.Double arc = new Arc2D.Double(circle.x + inset, circle.y + inset,
 				circle.width - thickness - 1, circle.height - thickness - 1, 90, -360, Arc2D.OPEN);

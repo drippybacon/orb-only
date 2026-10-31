@@ -1,3 +1,27 @@
+/*
+ * Copyright (c) 2026, drippybacon
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice, this
+ *    list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 package dev.orbonly;
 
 import java.awt.Rectangle;
@@ -24,7 +48,7 @@ final class OrbUiState
 	private long pass;
 
 	@Inject
-	private OrbUiState(Client client, OrbFrameImages frames)
+	OrbUiState(Client client, OrbFrameImages frames)
 	{
 		this.client = client;
 		this.frames = frames;
@@ -37,30 +61,37 @@ final class OrbUiState
 			restore();
 			return;
 		}
-		surfaces.clear();
 		pass++;
+		frames.beginPass();
 		for (OrbType orb : OrbType.values())
 		{
-			Widget container = client.getWidget(orb.containerId);
-			Widget backing = client.getWidget(orb.backingId);
-			Widget button = client.getWidget(orb.buttonId);
-			Widget value = client.getWidget(orb.valueId);
-			Rectangle circle = orb.getCircleBounds(client);
-			Widget icon = client.getWidget(orb.iconId);
-			if (circle == null || backing == null || button == null)
+			OrbType.Layout layout = orb.visibleLayout(client);
+			if (layout == null)
 			{
+				surfaces.remove(orb);
 				continue;
 			}
-			int innerDiameter = Math.min(icon.getWidth(), icon.getHeight());
-			if (frames.get(backing, SpriteID.MINIMAP_ORB_FRAME, circle.width, innerDiameter) == null)
+			Widget container = client.getWidget(layout.containerId);
+			Widget icon = client.getWidget(layout.iconId);
+			Widget backing = client.getWidget(layout.backingId);
+			Widget button = client.getWidget(layout.buttonId);
+			Widget value = client.getWidget(layout.valueId);
+			Rectangle circle = OrbType.circle(container, icon);
+			if (circle == null || backing == null || button == null
+				|| frames.get(backing, SpriteID.MINIMAP_ORB_FRAME, circle.width,
+					Math.min(icon.getWidth(), icon.getHeight())) == null
+				|| !frames.prepareBackground(backing, circle))
 			{
-				// Keep the native frame until SpriteManager has loaded its artwork.
+				surfaces.remove(orb);
 				continue;
 			}
-			// Rendering does not depend on the button having a client script.
-			// HP's cure operation can be handled by the server without an onOp listener.
-			surfaces.put(orb, new Surface(orb, container, backing, button));
-			hide(backing);
+			Surface surface = surfaces.get(orb);
+			if (surface == null || surface.container != container || surface.icon != icon
+				|| surface.backing != backing || surface.button != button || surface.value != value)
+			{
+				surfaces.put(orb, new Surface(orb, layout, container, icon, backing, button, value));
+			}
+			// Keep native draw order so the opaque backing stays beneath the gauge.
 			hide(button);
 			hide(value);
 			disableBlocking(container);
@@ -78,6 +109,7 @@ final class OrbUiState
 				}
 			}
 		}
+		frames.finishPass();
 		// Release retired widgets and controls that fell back to native rendering.
 		states.entrySet().removeIf(entry ->
 		{
@@ -104,9 +136,9 @@ final class OrbUiState
 	boolean current(Surface surface)
 	{
 		return client.getGameState() == GameState.LOGGED_IN
-			&& client.getWidget(surface.orb.containerId) == surface.container
-			&& client.getWidget(surface.orb.buttonId) == surface.button
-			&& surface.orb.getCircleBounds(client) != null;
+			&& client.getWidget(surface.layout.containerId) == surface.container
+			&& client.getWidget(surface.layout.buttonId) == surface.button
+			&& surface.circle() != null;
 	}
 
 	boolean nativeHidden(Widget widget)
@@ -128,7 +160,10 @@ final class OrbUiState
 			state.hidden = widget.isSelfHidden();
 		}
 		state.hiddenApplied = true;
-		widget.setHidden(true);
+		if (!widget.isSelfHidden())
+		{
+			widget.setHidden(true);
+		}
 	}
 
 	private void disableBlocking(Widget widget)
@@ -140,7 +175,10 @@ final class OrbUiState
 			state.blocking = widget.getNoClickThrough();
 		}
 		state.blockingApplied = true;
-		widget.setNoClickThrough(false);
+		if (widget.getNoClickThrough())
+		{
+			widget.setNoClickThrough(false);
+		}
 	}
 
 	void releaseForNativeUpdates()
@@ -153,6 +191,7 @@ final class OrbUiState
 		releaseForNativeUpdates();
 		states.clear();
 		surfaces.clear();
+		frames.clear();
 	}
 
 	static boolean contains(Rectangle circle, int x, int y)
@@ -169,16 +208,28 @@ final class OrbUiState
 	static final class Surface
 	{
 		final OrbType orb;
+		final OrbType.Layout layout;
 		final Widget container;
+		final Widget icon;
 		final Widget backing;
 		final Widget button;
+		final Widget value;
 
-		private Surface(OrbType orb, Widget container, Widget backing, Widget button)
+		private Surface(OrbType orb, OrbType.Layout layout, Widget container, Widget icon,
+			Widget backing, Widget button, Widget value)
 		{
 			this.orb = orb;
+			this.layout = layout;
 			this.container = container;
+			this.icon = icon;
 			this.backing = backing;
 			this.button = button;
+			this.value = value;
+		}
+
+		Rectangle circle()
+		{
+			return OrbType.circle(container, icon);
 		}
 	}
 
