@@ -77,10 +77,7 @@ final class OrbUiState
 			Widget button = client.getWidget(layout.buttonId);
 			Widget value = client.getWidget(layout.valueId);
 			Rectangle circle = OrbType.circle(container, icon);
-			if (circle == null || backing == null || button == null
-				|| frames.get(backing, SpriteID.MINIMAP_ORB_FRAME, circle.width,
-					Math.min(icon.getWidth(), icon.getHeight())) == null
-				|| !frames.prepareBackground(backing, circle))
+			if (circle == null || backing == null || button == null)
 			{
 				surfaces.remove(orb);
 				continue;
@@ -97,6 +94,8 @@ final class OrbUiState
 			disableBlocking(container);
 			disableBlocking(backing);
 			disableBlocking(button);
+			// Keep replacement labels active even if sprite art is temporarily unavailable.
+			frames.prepareBackground(backing, circle);
 			Widget[] children = container.getChildren();
 			if (children != null)
 			{

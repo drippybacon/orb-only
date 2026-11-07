@@ -124,14 +124,16 @@ public class OrbUiStateTest
 	}
 
 	@Test
-	public void fallsBackToNativeWhenArtworkIsUnavailable()
+	public void keepsReplacementLabelsWhenArtworkIsUnavailable()
 	{
 		context.ui.prepare();
 		when(context.sprites.getSprite(SpriteID.MINIMAP_ORB_FRAME, 0)).thenReturn(null);
 		context.ui.prepare();
-		assertNull(context.ui.surface(OrbType.PRAYER));
-		assertFalse(prayer.button.isSelfHidden());
-		assertTrue(prayer.container.getNoClickThrough());
+		assertNotNull(context.ui.surface(OrbType.PRAYER));
+		assertTrue(prayer.button.isSelfHidden());
+		assertTrue(prayer.value.isSelfHidden());
+		assertFalse(prayer.container.getNoClickThrough());
+		assertFalse(prayer.button.getNoClickThrough());
 		assertTrue(context.widgetSprites.isEmpty());
 	}
 
