@@ -1,36 +1,43 @@
-# Automated tests
+# Testing
 
-Use JDK 17. From the project directory:
+Use JDK 17 and the included Gradle wrapper. From the repository root, run:
 
 ```powershell
-.\gradlew.bat clean test
+.\gradlew.bat test
 ```
 
-On macOS/Linux, use `./gradlew clean test`. To run one suite, add e.g. `--tests dev.orbonly.OrbInteractionsTest`.
+On macOS/Linux, use `./gradlew test`.
 
-The task builds the JAR, then runs headless JUnit 4/Mockito tests with client/API doubles. It does not start RuneLite. `OrbOnlyDev` is the separate launcher used by `run`.
+To run only the frame-recovery regression test:
+
+```powershell
+.\gradlew.bat test --tests dev.orbonly.OrbOnlyPluginTest
+```
+
+The tests build the local JAR and use JUnit 4, Mockito and simulated client/widget state. They run without opening RuneLite. To launch the development client, see [Development](DEVELOPMENT.md).
 
 ## Coverage
 
 | Suite | Main checks |
 | --- | --- |
-| `OrbUiStateTest` | Visibility/blocking restoration, game-hidden controls, native updates, surface reuse, no-minimap selection, missing artwork, logout and circle bounds. |
-| `OrbFrameImagesTest` | Transparent number panels, opaque backings, native backing API use outside scene coordinates, override ownership and cache invalidation/eviction. |
-| `OrbInteractionsTest` | Operation slots, component IDs, targets, masks, hidden controls and priority for foreign interfaces/overlay controls. |
-| `OrbPrayerHelperTest` | Points/time labels, combined drain, equipment bonus, prayer aliases/LMS, representative potion thresholds, wrench effects, core settings, tooltips and tick-sweep geometry. |
-| `OrbPoisonTimerTest` | Tick interpolation, severity/venom transitions, local damage resynchronisation, cures/immunity and session changes. |
-| `OrbValueOverlayTest` | Special states `0`, `1`, `2`, highlight toggles and active-prayer colours. |
-| `OrbPackagingTest` | Matching root/resource/JAR notices and exclusion of test/development classes and dependencies. |
+| `OrbOnlyPluginTest` | A missed `ScriptPostFired` event cannot prevent the next frame from hiding the native value and button again. |
+| `OrbUiStateTest` | Widget restoration, game-hidden controls, layout changes, missing artwork, logout and circular bounds. |
+| `OrbFrameImagesTest` | Transparent side panels, opaque backings, sprite overrides and image-cache invalidation. |
+| `OrbInteractionsTest` | Native actions, operation slots, action masks and priority for other interfaces and overlays. |
+| `OrbPrayerHelperTest` | Points/time labels, drain calculations, equipment bonus, prayer aliases, potion thresholds, core settings, tooltips and the tick sweep. |
+| `OrbPoisonTimerTest` | Countdown interpolation, poison/venom transitions, damage synchronisation, cures and session changes. |
+| `OrbValueOverlayTest` | Active prayer and mainhand/offhand special-attack colours and toggles. |
+| `OrbPackagingTest` | Matching license notices and exclusion of test/development classes and dependencies from the local JAR. |
 
-Poison timing uses a controllable clock; artwork tests use synthetic sprites. No test sleeps are required. Test dependencies are not shipped with the plugin.
+The poison tests use a controllable clock, and artwork tests use generated sprites. Test dependencies are not shipped with the plugin.
 
 Results and test counts are in:
 
 - HTML: `build/reports/tests/test/index.html`
 - XML: `build/test-results/test/`
 
-## Limits
+## What still needs a live client
 
-Mocks do not reproduce native rendering, packet processing or menu subscriber ordering. The backing test exercises the sprite API at Fixed-mode coordinates; it does not render the native interface. Packaging tests inspect the local JAR and standard resource files, not a Hub-produced artifact. The prayer-display preference migration is not covered by the current suite.
+These tests cannot reproduce native rendering, packet timing or the order in which other plugins change menus. The frame-recovery test verifies the fallback for a missed notification; it does not establish the original cause of a live rendering issue. Packaging tests inspect the local JAR rather than a Hub-built artifact.
 
-Complete the [remaining checks](REVIEW-FOLLOWUP.md#validation-limits-and-remaining-checks) before release.
+Use the [manual checks](DEVELOPMENT.md#manual-checks) for layouts, Resource Packs, profile switching and preference migration.

@@ -201,6 +201,12 @@ public class OrbOnlyPlugin extends Plugin
 	@Subscribe
 	public void onBeforeRender(BeforeRender event)
 	{
+		// Recover at the frame boundary if a script-finished event was missed.
+		if (scriptDepth != 0)
+		{
+			scriptDepth = 0;
+			nativeStateReleased = false;
+		}
 		prepare();
 	}
 

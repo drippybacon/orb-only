@@ -1,51 +1,50 @@
 # Orb Only
 
-Removes the side number panels from the hitpoints, prayer, run energy and special attack orbs. Values can appear inside the circles or in movable labels.
+Removes the side number panels from the hitpoints, prayer, run energy and special attack orbs. Keep values inside the circles, move the labels wherever you like, or hide them for icons only.
+
+| Vertical layout | Minimap layout |
+| :---: | :---: |
+| <img src="docs/images/orbs-vertical.png" alt="Circular orbs in a vertical layout with centered values" height="320"> | <img src="docs/images/orbs-minimap.png" alt="Circular orbs around the minimap with centered values" height="320"> |
+
+## Install
+
+Open **Plugin Hub** in RuneLite, search for **Orb Only**, and install it. Open its settings to customise the display.
 
 ## Labels
 
-**Show labels** is enabled by default. Choose a **Label position**:
+Labels are on by default. Choose a **Label position**:
 
-- **Center** (default): values stay inside each orb and shrink to fit.
-- **Free (Alt-drag)**: hold Alt to move each label. Alt-right-click resets it to the orb. Saved positions are kept when switching back to Center.
+- **Center**: values sit inside the orbs and shrink to fit.
+- **Free (Alt-drag)**: hold Alt and drag each label to move it. Alt-right-click resets a label to its orb. Saved positions are kept when switching back to Center.
 
-Font size and colour are configurable. Active prayer and special attack highlights can override the label colour.
+Use **Show labels** to switch between values and icons only. Font size and colour are configurable.
 
-### Prayer display
+## Prayer
 
-**Show prayer points** is off by default: active prayers show estimated time remaining, based on current points, active prayers and equipment prayer bonus. Enable it to show points instead. Inactive prayers always show points.
+By default, active prayers show estimated time remaining; inactive prayers show points. Enable **Show prayer points** to always show points. Estimates use your current points, active prayers and equipment prayer bonus.
 
-Centered time labels use whole minutes for estimates of ten minutes or more; Free labels show the full time. This choice is independent of the core Prayer plugin's orb-text setting. Other orbs retain their native value text, including run-energy timers.
+Centered estimates of ten minutes or more use whole minutes, such as `12m`. Free labels show the full time. This setting is independent of the core Prayer plugin's orb-text setting.
 
-With the core **Prayer** plugin enabled, Orb Only also draws its potion-dose pulse and statistics tooltip using the core settings. **Show prayer tick helper** is enabled by default; turn it off to hide the tick sweep on the orb. The helper also requires **Pray flick location** set to **Prayer orb** or **Both** in the core Prayer settings.
+| Display | Settings to use |
+| --- | --- |
+| Potion-dose pulse and statistics tooltip | Enable the core **Prayer** plugin and its corresponding options. |
+| Prayer tick sweep | Enable **Show prayer tick helper** in Orb Only, plus **Prayer orb** or **Both** as the flick-helper location in the core Prayer plugin. |
 
-## Indicators
+Other orb labels keep their native text, including run-energy timers.
 
-- **Active prayer/special attack:** configurable border and label highlights, enabled by default. Borders also work with labels hidden.
-- **Poison/venom countdown:** an estimated countdown ring around HP, enabled by default. Colour and thickness are configurable. Damage hitsplats resynchronise the timer; starting the plugin while already poisoned may leave the first interval inaccurate.
+## Highlights and countdowns
 
-## Artwork and interfaces
+- **Active prayer and special attack** can highlight the orb border and label. Colours are configurable, and borders also work with labels hidden.
+- **Poison/venom countdown** draws an estimated ring around HP. Colour and thickness are configurable. Observed damage hits resynchronise it; the first interval may be inaccurate if you enable the plugin while already poisoned.
 
-Orb Only uses the current game sprites, including Resource Packs overrides; no pack edits are needed. It handles the normal and no-minimap orb interfaces and follows moved orbs.
+## Compatibility
 
-Circular click regions expose the native orb actions and right-click options. Disabling the plugin restores the managed widget flags and backing artwork. These replacement click regions still need explicit RuneLite review before Plugin Hub distribution; see the [review follow-up](docs/REVIEW-FOLLOWUP.md).
+Orb Only uses your current game artwork, including Resource Packs. It supports layouts with or without the minimap and follows existing orb positions. To move the orbs themselves, use your layout plugin; **Free** moves only the labels.
 
-## Build, run and test
+The circular orbs keep their native actions and right-click options. Disabling Orb Only restores the original appearance.
 
-Use JDK 17. From this directory on Windows:
+## Development and license
 
-```powershell
-.\gradlew.bat jar
-.\gradlew.bat run
-.\gradlew.bat test
-```
-
-On macOS/Linux, use `./gradlew` instead. The first build downloads Gradle and dependencies.
-
-- `jar`: writes the plugin to `build/libs/`.
-- `run`: opens a development RuneLite client with Orb Only loaded.
-- `test`: runs the headless regression suite. See [coverage and limits](docs/TESTING.md).
-
-## License
+Build and run instructions are in the [development guide](docs/DEVELOPMENT.md). See [testing](docs/TESTING.md) for regression coverage.
 
 BSD 2-Clause. See [LICENSE](LICENSE) and [third-party notices](THIRD-PARTY-NOTICES.md).
