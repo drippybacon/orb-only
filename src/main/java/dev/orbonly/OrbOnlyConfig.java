@@ -28,16 +28,46 @@ import java.awt.Color;
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
+import net.runelite.client.config.ConfigSection;
 import net.runelite.client.config.Range;
 
 @ConfigGroup("orbonly")
 public interface OrbOnlyConfig extends Config
 {
+	@ConfigSection(
+			name = "Labels",
+			description = "Show and position the orb value labels.",
+			position = 0
+	)
+	String LABELS_SECTION = "labels";
+
+	@ConfigSection(
+			name = "Prayer",
+			description = "Prayer points, time remaining and tick helper.",
+			position = 1
+	)
+	String PRAYER_SECTION = "prayer";
+
+	@ConfigSection(
+			name = "Highlights",
+			description = "Colours for active prayer and special attack.",
+			position = 2
+	)
+	String HIGHLIGHTS_SECTION = "highlights";
+
+	@ConfigSection(
+			name = "Poison and venom",
+			description = "Estimated countdown around the hitpoints orb.",
+			position = 3
+	)
+	String POISON_SECTION = "poisonAndVenom";
+
 	@ConfigItem(
 			keyName = "showOrbValues",
 			name = "Show labels",
 			description = "Show orb values. Turn off for icons only.",
-			position = 0
+			position = 0,
+			section = LABELS_SECTION
 	)
 	default boolean showOrbValues()
 	{
@@ -48,7 +78,8 @@ public interface OrbOnlyConfig extends Config
 			keyName = "labelPosition",
 			name = "Label position",
 			description = "Center values inside each orb, or Alt-drag Free labels. Alt-right-click resets a Free label.",
-			position = 1
+			position = 1,
+			section = LABELS_SECTION
 	)
 	default OrbLabelPosition labelPosition()
 	{
@@ -60,7 +91,8 @@ public interface OrbOnlyConfig extends Config
 			keyName = "valueFontSize",
 			name = "Label font size",
 			description = "Font size; centered labels shrink to fit.",
-			position = 2
+			position = 2,
+			section = LABELS_SECTION
 	)
 	default int valueFontSize()
 	{
@@ -71,7 +103,8 @@ public interface OrbOnlyConfig extends Config
 			keyName = "labelColor",
 			name = "Label colour",
 			description = "Label colour when no active-state highlight applies.",
-			position = 3
+			position = 3,
+			section = LABELS_SECTION
 	)
 	default Color labelColor()
 	{
@@ -82,7 +115,8 @@ public interface OrbOnlyConfig extends Config
 			keyName = "showPrayerPoints",
 			name = "Show prayer points",
 			description = "Show points instead of estimated time while prayers are active. Inactive prayers always show points.",
-			position = 4
+			position = 4,
+			section = PRAYER_SECTION
 	)
 	default boolean showPrayerPoints()
 	{
@@ -93,7 +127,8 @@ public interface OrbOnlyConfig extends Config
 			keyName = "showPrayerTickHelper",
 			name = "Show prayer tick helper",
 			description = "Show the Prayer plugin's tick sweep on the orb. Uses its flick-helper settings.",
-			position = 5
+			position = 5,
+			section = PRAYER_SECTION
 	)
 	default boolean showPrayerTickHelper()
 	{
@@ -104,7 +139,8 @@ public interface OrbOnlyConfig extends Config
 			keyName = "highlightActiveSpecialAttack",
 			name = "Highlight active special attack",
 			description = "Highlight the orb and label when special attack is armed.",
-			position = 6
+			position = 6,
+			section = HIGHLIGHTS_SECTION
 	)
 	default boolean highlightActiveSpecialAttack()
 	{
@@ -115,7 +151,8 @@ public interface OrbOnlyConfig extends Config
 			keyName = "activeSpecialAttackColor",
 			name = "Active special attack colour",
 			description = "Border and label colour for an armed special attack.",
-			position = 7
+			position = 7,
+			section = HIGHLIGHTS_SECTION
 	)
 	default Color activeSpecialAttackColor()
 	{
@@ -126,7 +163,8 @@ public interface OrbOnlyConfig extends Config
 			keyName = "highlightActivePrayer",
 			name = "Highlight active prayer",
 			description = "Highlight the orb and label while quick prayers or any individual prayer are active.",
-			position = 8
+			position = 8,
+			section = HIGHLIGHTS_SECTION
 	)
 	default boolean highlightActivePrayer()
 	{
@@ -137,7 +175,8 @@ public interface OrbOnlyConfig extends Config
 			keyName = "activePrayerColor",
 			name = "Active prayer colour",
 			description = "Border and label colour while prayer is active.",
-			position = 9
+			position = 9,
+			section = HIGHLIGHTS_SECTION
 	)
 	default Color activePrayerColor()
 	{
@@ -148,7 +187,8 @@ public interface OrbOnlyConfig extends Config
 			keyName = "showPoisonCountdown",
 			name = "Poison/venom countdown",
 			description = "Show an estimated countdown to the next poison/venom hit around the HP orb.",
-			position = 10
+			position = 10,
+			section = POISON_SECTION
 	)
 	default boolean showPoisonCountdown()
 	{
@@ -160,7 +200,8 @@ public interface OrbOnlyConfig extends Config
 			keyName = "poisonRingThickness",
 			name = "Countdown ring thickness",
 			description = "Countdown ring width in pixels.",
-			position = 11
+			position = 11,
+			section = POISON_SECTION
 	)
 	default int poisonRingThickness()
 	{
@@ -171,7 +212,8 @@ public interface OrbOnlyConfig extends Config
 			keyName = "poisonRingColor",
 			name = "Poison ring colour",
 			description = "Ring colour while poisoned.",
-			position = 12
+			position = 12,
+			section = POISON_SECTION
 	)
 	default Color poisonRingColor()
 	{
@@ -182,7 +224,8 @@ public interface OrbOnlyConfig extends Config
 			keyName = "venomRingColor",
 			name = "Venom ring colour",
 			description = "Ring colour while venomed.",
-			position = 13
+			position = 13,
+			section = POISON_SECTION
 	)
 	default Color venomRingColor()
 	{

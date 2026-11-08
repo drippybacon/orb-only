@@ -17,7 +17,7 @@ Labels are on by default. Choose a **Label position**:
 - **Center**: values sit inside the orbs and shrink to fit.
 - **Free (Alt-drag)**: hold Alt and drag each label to move it. Alt-right-click resets a label to its orb. Saved positions are kept when switching back to Center.
 
-Use **Show labels** to switch between values and icons only. Font size and colour are configurable.
+Use **Show labels** to switch between values and icons only. Font size and colour are configurable. Hitpoints, run energy and special attack labels keep their native text, including run-energy timers.
 
 ## Prayer
 
@@ -30,12 +30,13 @@ Centered estimates of ten minutes or more use whole minutes, such as `12m`. Free
 | Potion-dose pulse and statistics tooltip | Enable the core **Prayer** plugin and its corresponding options. |
 | Prayer tick sweep | Enable **Show prayer tick helper** in Orb Only, plus **Prayer orb** or **Both** as the flick-helper location in the core Prayer plugin. |
 
-Other orb labels keep their native text, including run-energy timers.
+## Highlights
 
-## Highlights and countdowns
+**Active prayer and special attack** can highlight the orb border and label. Colours are configurable, and borders also work with labels hidden.
 
-- **Active prayer and special attack** can highlight the orb border and label. Colours are configurable, and borders also work with labels hidden.
-- **Poison/venom countdown** draws an estimated ring around HP. Colour and thickness are configurable. Observed damage hits resynchronise it; the first interval may be inaccurate if you enable the plugin while already poisoned.
+## Poison and venom
+
+**Poison/venom countdown** draws an estimated ring around HP. Colour and thickness are configurable. Observed damage hits resynchronise it; the first interval may be inaccurate if you enable the plugin while already poisoned.
 
 ## Compatibility
 
